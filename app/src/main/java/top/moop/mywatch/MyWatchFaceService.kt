@@ -1,11 +1,13 @@
 package top.moop.mywatch
 
 import android.graphics.RectF
+import android.util.Log
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
+import androidx.wear.watchface.ComplicationTapFilter
 import androidx.wear.watchface.WatchFace
 import androidx.wear.watchface.WatchFaceService
 import androidx.wear.watchface.WatchFaceType
@@ -45,7 +47,10 @@ class MyWatchFaceService : WatchFaceService() {
         currentUserStyleRepository: CurrentUserStyleRepository
     ): ComplicationSlotsManager {
         val canvasComplicationFactory = CanvasComplicationFactory { watchState, listener ->
-            CanvasComplicationDrawable(ComplicationDrawable(this), watchState, listener)
+            val complicationDrawable = ComplicationDrawable(this).apply {
+                setContext(this@MyWatchFaceService)
+            }
+            CanvasComplicationDrawable(complicationDrawable, watchState, listener)
         }
 
         return ComplicationSlotsManager(
@@ -61,7 +66,7 @@ class MyWatchFaceService : WatchFaceService() {
                         ComplicationType.SMALL_IMAGE
                     ),
                     DefaultComplicationDataSourcePolicy(
-                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        SystemDataSources.DATA_SOURCE_STEP_COUNT,  // Steps
                         ComplicationType.SHORT_TEXT
                     ),
                     ComplicationSlotBounds(
@@ -80,7 +85,7 @@ class MyWatchFaceService : WatchFaceService() {
                         ComplicationType.SMALL_IMAGE
                     ),
                     DefaultComplicationDataSourcePolicy(
-                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        SystemDataSources.DATA_SOURCE_DATE,  // Battery level
                         ComplicationType.SHORT_TEXT
                     ),
                     ComplicationSlotBounds(
@@ -99,12 +104,33 @@ class MyWatchFaceService : WatchFaceService() {
                         ComplicationType.SMALL_IMAGE
                     ),
                     DefaultComplicationDataSourcePolicy(
-                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,  // Sunrise/Sunset
                         ComplicationType.SHORT_TEXT
                     ),
                     ComplicationSlotBounds(
                         getRatioByPixel(299f, 300f, 399f, 400f)
                     )
+                ).build(),
+
+                // Text-only complication at bottom center
+                ComplicationSlot.createEdgeComplicationSlotBuilder(
+                    /*id */ 4,
+                    canvasComplicationFactory,
+                    listOf(
+                        ComplicationType.SHORT_TEXT
+                    ),
+                    DefaultComplicationDataSourcePolicy(
+                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        ComplicationType.SHORT_TEXT
+                    ),
+                    ComplicationSlotBounds(
+                        RectF(0.4f, 0.9f, 0.6f, 1.0f)  // Positioned at the bottom center
+                    ),
+                    object : ComplicationTapFilter {
+                        fun onComplicationTap(complicationId: Int) {
+                            // Handle tap event
+                        }
+                    }
                 ).build()
             ),
             currentUserStyleRepository
@@ -129,6 +155,8 @@ class MyWatchFaceService : WatchFaceService() {
             currentUserStyleRepository = currentUserStyleRepository,
             canvasType = CanvasType.HARDWARE
         )
+
+        Log.d("MyWatchFaceService", "Creating complication slot 4")
 
         return WatchFace(WatchFaceType.DIGITAL, renderer)
     }

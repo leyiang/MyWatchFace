@@ -116,13 +116,14 @@ class MyWatchRender(
 
         DrawUtils.drawRect(canvas, 0f, 193f, 450f, 92f, 20f, rectPaint)
 
-
-        canvas.drawText("\uD83C\uDF1E 06:13", 225f, 442f, textPaint)
+        // Comment out the manual text since we're replacing it with a complication
+        // canvas.drawText("\uD83C\uDF1E 06:13", 225f, 442f, textPaint)
+        
         drawTime(canvas, zonedDateTime)
         drawDate(canvas, zonedDateTime)
-		drawSome(canvas)
+        drawSome(canvas)
 
-        // Draw complications
+        // Draw complications LAST to ensure they're on top
         for ((_, complication) in complicationSlotsManager.complicationSlots) {
             complication.render(canvas, zonedDateTime, renderParameters)
         }
