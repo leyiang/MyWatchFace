@@ -1,0 +1,57 @@
+<WatchFace width="450" height="450">
+    <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+    <Metadata key="PREVIEW_TIME" value="10:08:32" />
+
+    <UserConfigurations>
+        <ColorConfiguration id="themeColor" defaultValue="0" displayName="colors_label" screenReaderText="colors_label">
+            <ColorOption displayName="theme_one_label" id="0" colors="#16697a #d6d5d4 #ffa62b #333333 #000000"/>
+            <ColorOption displayName="theme_two_label" id="1" colors="#16697a #d6d5d4 #33cd2b #333333 #000000"/>
+        </ColorConfiguration>
+    </UserConfigurations>
+
+    <Scene backgroundColor="#ff000000">
+        <Group name="border_and_main_label" x="0" y="0" width="112" height="112" alpha="255">
+        </Group>
+
+
+        <ComplicationSlot
+            x="168" y="24"
+            width="112" height="112"
+            slotId="0"
+            name="top_complication" displayName="Top"
+            supportedTypes="RANGED_VALUE">
+
+            <Complication type="SHORT_TEXT">
+                <PartImage x="35" y="16" width="22" height="22" pivotX="0.5" pivotY="0.5"
+                    name="SomeIcon" alpha="255">
+                    <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]"/>
+                </PartImage>
+                <PartText x="18" y="39" width="56" height="22" pivotX="0.5" pivotY="0.5"
+                    name="SomeText" alpha="255">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font family="SYNC_TO_DEVICE" size="20" weight="NORMAL"
+                            slant="NORMAL" color="#ffffffff">
+                            <Template>
+                                %s
+                                <Parameter expression="[COMPLICATION.TEXT]"/>
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+                <PartText x="19" y="62" width="54" height="14" pivotX="0.5" pivotY="0.5"
+                    name="SomeTitle" alpha="255">
+                    <Text align="CENTER" ellipsis="TRUE">
+                        <Font family="SYNC_TO_DEVICE" size="12" weight="NORMAL"
+                            slant="NORMAL" color="#ffadadad">
+                            <Template>
+                                %s
+                                <Parameter expression="[COMPLICATION.TITLE]"/>
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+
+        </ComplicationSlot>
+    </Scene>
+</WatchFace>
