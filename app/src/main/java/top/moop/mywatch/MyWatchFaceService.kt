@@ -46,9 +46,19 @@ class MyWatchFaceService : WatchFaceService() {
     override fun createComplicationSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository
     ): ComplicationSlotsManager {
-        val canvasComplicationFactory = CanvasComplicationFactory { watchState, listener ->
+        // Factory for regular complications (with border)
+        val regularComplicationFactory = CanvasComplicationFactory { watchState, listener ->
             val complicationDrawable = ComplicationDrawable(this).apply {
                 setContext(this@MyWatchFaceService)
+            }
+            CanvasComplicationDrawable(complicationDrawable, watchState, listener)
+        }
+
+        // Factory for borderless text complication
+        val borderlessComplicationFactory = CanvasComplicationFactory { watchState, listener ->
+            val complicationDrawable = ComplicationDrawable(this).apply {
+                setContext(this@MyWatchFaceService)
+                // Try to minimize the border effect by setting a transparent style
             }
             CanvasComplicationDrawable(complicationDrawable, watchState, listener)
         }
@@ -57,7 +67,7 @@ class MyWatchFaceService : WatchFaceService() {
             listOf(
                 ComplicationSlot.createRoundRectComplicationSlotBuilder(
                     /*id */ 1,
-                    canvasComplicationFactory,
+                    regularComplicationFactory,
                     listOf(
                         ComplicationType.RANGED_VALUE,
                         ComplicationType.LONG_TEXT,
@@ -76,7 +86,7 @@ class MyWatchFaceService : WatchFaceService() {
 
                 ComplicationSlot.createRoundRectComplicationSlotBuilder(
                     /*id */ 2,
-                    canvasComplicationFactory,
+                    regularComplicationFactory,
                     listOf(
                         ComplicationType.RANGED_VALUE,
                         ComplicationType.LONG_TEXT,
@@ -95,7 +105,7 @@ class MyWatchFaceService : WatchFaceService() {
 
                 ComplicationSlot.createRoundRectComplicationSlotBuilder(
                     /*id */ 3,
-                    canvasComplicationFactory,
+                    regularComplicationFactory,
                     listOf(
                         ComplicationType.RANGED_VALUE,
                         ComplicationType.LONG_TEXT,
@@ -112,10 +122,10 @@ class MyWatchFaceService : WatchFaceService() {
                     )
                 ).build(),
 
-                // Text-only complication at bottom center
-                ComplicationSlot.createEdgeComplicationSlotBuilder(
+                // Bottom text complication with borderless factory
+                ComplicationSlot.createRoundRectComplicationSlotBuilder(
                     /*id */ 4,
-                    canvasComplicationFactory,
+                    borderlessComplicationFactory,  // Use the borderless factory here
                     listOf(
                         ComplicationType.SHORT_TEXT
                     ),
@@ -124,13 +134,8 @@ class MyWatchFaceService : WatchFaceService() {
                         ComplicationType.SHORT_TEXT
                     ),
                     ComplicationSlotBounds(
-                        RectF(0.4f, 0.9f, 0.6f, 1.0f)  // Positioned at the bottom center
-                    ),
-                    object : ComplicationTapFilter {
-                        fun onComplicationTap(complicationId: Int) {
-                            // Handle tap event
-                        }
-                    }
+                        RectF(0.3f, 0.85f, 0.7f, 1.0f)
+                    )
                 ).build()
             ),
             currentUserStyleRepository

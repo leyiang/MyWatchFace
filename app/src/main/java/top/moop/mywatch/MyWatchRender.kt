@@ -12,6 +12,9 @@ import androidx.wear.watchface.Renderer
 import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.style.CurrentUserStyleRepository
 import java.time.ZonedDateTime
+import androidx.wear.watchface.complications.data.ComplicationData
+import androidx.wear.watchface.complications.data.ShortTextComplicationData
+import androidx.wear.watchface.complications.data.PlainComplicationText
 
 class MyWatchRender(
     private val context: Context,
@@ -123,9 +126,26 @@ class MyWatchRender(
         drawDate(canvas, zonedDateTime)
         drawSome(canvas)
 
-        // Draw complications LAST to ensure they're on top
-        for ((_, complication) in complicationSlotsManager.complicationSlots) {
-            complication.render(canvas, zonedDateTime, renderParameters)
+        // Draw complications with conditional rendering
+        for ((id, complication) in complicationSlotsManager.complicationSlots) {
+            if (id == 4) {
+                // For the bottom text complication (ID 4), draw only the text without background
+                val paint = Paint().apply {
+                    color = Color.LTGRAY
+                    textSize = 24f
+                    textAlign = Paint.Align.CENTER
+                }
+                // Get the text from the complication and draw it directly
+                val data = complication.complicationData.value
+                if (data is ShortTextComplicationData) {
+                    // Convert ZonedDateTime to Instant and ensure we get a String
+                    val text = data.text.getTextAt(context.resources, zonedDateTime.toInstant()).toString()
+                    canvas.drawText(text, bounds.exactCenterX(), 444f, paint)
+                }
+            } else {
+                // For other complications, render normally
+                complication.render(canvas, zonedDateTime, renderParameters)
+            }
         }
     }
 
