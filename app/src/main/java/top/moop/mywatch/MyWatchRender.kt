@@ -87,8 +87,10 @@ class MyWatchRender(
 	}
 
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime) {
-        // 设置背景颜色
+        // First draw the background
         canvas.drawColor(Color.BLACK)
+        
+        // Draw your existing watch face elements
         val rectPaint = Paint().apply {
             color = Color.DKGRAY
             style = Paint.Style.FILL
@@ -119,6 +121,11 @@ class MyWatchRender(
         drawTime(canvas, zonedDateTime)
         drawDate(canvas, zonedDateTime)
 		drawSome(canvas)
+
+        // Draw complications
+        for ((_, complication) in complicationSlotsManager.complicationSlots) {
+            complication.render(canvas, zonedDateTime, renderParameters)
+        }
     }
 
     override fun renderHighlightLayer(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime) {

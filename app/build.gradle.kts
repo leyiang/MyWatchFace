@@ -39,7 +39,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
@@ -55,8 +54,14 @@ dependencies {
     implementation(libs.tiles.tooling.preview)
     implementation(libs.horologist.compose.tools)
     implementation(libs.horologist.tiles)
-    implementation(libs.watchface.complications.data.source.ktx)
+    
+    // Wear OS and Watchface dependencies
     implementation(libs.watchface)
+    implementation(libs.watchface.complications.data.source.ktx)
+    implementation("androidx.wear.watchface:watchface-complications-rendering:1.1.1")
+    implementation("androidx.wear.watchface:watchface-editor:1.1.1")
+
+    // Testing dependencies
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
