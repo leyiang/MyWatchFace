@@ -62,13 +62,13 @@ class MyWatchRender(
 
         // Format Gregorian date and weekday
         val weekDays = arrayOf("日", "一", "二", "三", "四", "五", "六")
-        val dateText = String.format("%02d-%02d 周%s",
+        val dateText = String.format("%02d月%02d   周%s",
             zonedDateTime.monthValue,
             zonedDateTime.dayOfMonth,
             weekDays[zonedDateTime.dayOfWeek.value % 7]
         )
 
-        val wholeDateText = "$dateText     正月十五"
+        val wholeDateText = "$dateText   正月十五"
 
         canvas.drawText(wholeDateText, 225f, 92f, style)
     }
@@ -140,7 +140,7 @@ class MyWatchRender(
                 if (data is ShortTextComplicationData) {
                     // Convert ZonedDateTime to Instant and ensure we get a String
                     val text = data.text.getTextAt(context.resources, zonedDateTime.toInstant()).toString()
-                    canvas.drawText(text, bounds.exactCenterX(), 444f, paint)
+                    canvas.drawText("🌞 $text", bounds.exactCenterX(), 444f, paint)
                 }
             } else {
                 // For other complications, render normally
