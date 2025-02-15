@@ -28,6 +28,16 @@ class MyWatchFaceService : WatchFaceService() {
         return UserStyleSchema(listOf())
     }
 
+	fun getRatioByPixel(left: Float, top: Float, right: Float, bottom: Float): RectF {
+        val size = 450f
+        return RectF(
+            left / size,    // convert left pixel to ratio
+            top / size,     // convert top pixel to ratio
+            right / size,   // convert right pixel to ratio
+            bottom / size   // convert bottom pixel to ratio
+        )
+    }
+
     /**
      * 创建并返回此手表表面的复杂功能插槽管理器。
      */
@@ -37,25 +47,9 @@ class MyWatchFaceService : WatchFaceService() {
         val canvasComplicationFactory = CanvasComplicationFactory { watchState, listener ->
             CanvasComplicationDrawable(ComplicationDrawable(this), watchState, listener)
         }
+
         return ComplicationSlotsManager(
             listOf(
-                ComplicationSlot.createRoundRectComplicationSlotBuilder(
-                    /*id */ 0,
-                    canvasComplicationFactory,
-                    listOf(
-                        ComplicationType.RANGED_VALUE,
-                        ComplicationType.LONG_TEXT,
-                        ComplicationType.SHORT_TEXT,
-                        ComplicationType.MONOCHROMATIC_IMAGE,
-                        ComplicationType.SMALL_IMAGE
-                    ),
-                    DefaultComplicationDataSourcePolicy(
-                        SystemDataSources.DATA_SOURCE_DAY_OF_WEEK,
-                        ComplicationType.SHORT_TEXT
-                    ),
-                    ComplicationSlotBounds(RectF(0.15625f, 0.1875f, 0.84375f, 0.3125f))
-                )
-                    .build(),
                 ComplicationSlot.createRoundRectComplicationSlotBuilder(
                     /*id */ 1,
                     canvasComplicationFactory,
@@ -67,12 +61,51 @@ class MyWatchFaceService : WatchFaceService() {
                         ComplicationType.SMALL_IMAGE
                     ),
                     DefaultComplicationDataSourcePolicy(
-                        SystemDataSources.DATA_SOURCE_STEP_COUNT,
+                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
                         ComplicationType.SHORT_TEXT
                     ),
-                    ComplicationSlotBounds(RectF(0.1f, 0.5625f, 0.35f, 0.8125f))
-                )
-                    .build()
+                    ComplicationSlotBounds(
+                        getRatioByPixel(51f, 300f, 151f, 400f)
+                    )
+                ).build(),
+
+                ComplicationSlot.createRoundRectComplicationSlotBuilder(
+                    /*id */ 2,
+                    canvasComplicationFactory,
+                    listOf(
+                        ComplicationType.RANGED_VALUE,
+                        ComplicationType.LONG_TEXT,
+                        ComplicationType.SHORT_TEXT,
+                        ComplicationType.MONOCHROMATIC_IMAGE,
+                        ComplicationType.SMALL_IMAGE
+                    ),
+                    DefaultComplicationDataSourcePolicy(
+                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        ComplicationType.SHORT_TEXT
+                    ),
+                    ComplicationSlotBounds(
+                        getRatioByPixel(175f, 300f, 275f, 400f)
+                    )
+                ).build(),
+
+                ComplicationSlot.createRoundRectComplicationSlotBuilder(
+                    /*id */ 3,
+                    canvasComplicationFactory,
+                    listOf(
+                        ComplicationType.RANGED_VALUE,
+                        ComplicationType.LONG_TEXT,
+                        ComplicationType.SHORT_TEXT,
+                        ComplicationType.MONOCHROMATIC_IMAGE,
+                        ComplicationType.SMALL_IMAGE
+                    ),
+                    DefaultComplicationDataSourcePolicy(
+                        SystemDataSources.DATA_SOURCE_SUNRISE_SUNSET,
+                        ComplicationType.SHORT_TEXT
+                    ),
+                    ComplicationSlotBounds(
+                        getRatioByPixel(299f, 300f, 399f, 400f)
+                    )
+                ).build()
             ),
             currentUserStyleRepository
         )
